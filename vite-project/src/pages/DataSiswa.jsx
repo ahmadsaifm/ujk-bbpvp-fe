@@ -10,6 +10,8 @@ export default function DataSiswa() {
     const [alamat, setAlamat] = useState("");
     const [tanggal, setTanggal] = useState("");
     const [jurusan, setJurusan] = useState("");
+    const [jenkel, setJenkel] = useState("");
+
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -24,8 +26,24 @@ export default function DataSiswa() {
                 console.log(response.data)
             })
             .catch(error => {
-                alert(error);
+                alert("Gagal mengambil data", error);
             })
+    }
+    
+    const openModal = () => {
+        const modalEl = document.getElementById("exampleModal");
+        const modalInstance = Modal.getOrCreateInstance(modalEl);
+        modalInstance.show();
+    }
+
+    const closeModal = () => {
+        const modalEl = document.getElementById("exampleModal");
+        const modalInstance = Modal.getInstance(modalEl);
+        modalInstance.hide();
+
+        document.body.classList.remove('modal-open');
+        const backdrop = document.querySelectorAll('.modal-backdrop');
+        backdrop.forEach(bd => bd.remove());
     }
 
     const handleSubmit = (e) => {
@@ -35,13 +53,15 @@ export default function DataSiswa() {
                 nama_siswa: nama,
                 alamat_siswa: alamat,
                 tgl_siswa: tanggal,
-                jurusan_siswa: jurusan
+                jurusan_siswa: jurusan,
+                jenis_kelamin: jenkel
             })
             .then(response => {
                 setNama("");
                 setAlamat("");
                 setTanggal("");
                 setJurusan("");
+                setJenkel("");
                 console.log(response);
                 fetchData();
             })
@@ -49,14 +69,8 @@ export default function DataSiswa() {
                 alert("Gagal menyimpan data:", error);
             })
             .finally(() => {
-                const modalEl = document.getElementById("exampleModal");
-                const modalInstance = Modal.getOrCreateInstance(modalEl);
-                modalInstance.hide();
-                document.body.classList.remove('modal-open');
-                const backdrop = document.querySelectorAll('.modal-backdrop');
-                backdrop.forEach(bd => bd.remove());
-            })
-
+                closeModal();
+            });
     };
 
     const handleDelete = (id) => {
@@ -85,11 +99,11 @@ export default function DataSiswa() {
                     <div className="card-body">
                         <div className="d-flex justify-content-between align-items-center mb-3">
                             <h3 className="m-0">Data Siswa</h3>
-                            <button className="btn btn-primary rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                            <button type="submit" className="btn btn-primary rounded-pill px-4" data-bs-target="#exampleModal" onClick={openModal}>
                                 + Tambah Siswa
                             </button>
                         </div>
-                        <table className="table table-hover table-striped align-middle" style={{ width:'1000px' }}>
+                        <table className="table table-hover table-striped align-middle" style={{ width: '1000px' }}>
                             <thead className="table-primary">
                                 <tr>
                                     <th>Kode Siswa</th>
@@ -97,17 +111,19 @@ export default function DataSiswa() {
                                     <th>Alamat</th>
                                     <th>Tanggal Lahir</th>
                                     <th>Jurusan</th>
+                                    <th>Jenis Kelamin</th>
                                     <th className="text-center">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {allSiswa.map((siswa, index) => (
                                     <tr key={index}>
-                                        <td>{index + 1}</td>
+                                        <td>{siswa.kode_siswa}</td>
                                         <td>{siswa.nama_siswa}</td>
                                         <td>{siswa.alamat_siswa}</td>
                                         <td>{siswa.tgl_siswa}</td>
                                         <td>{siswa.jurusan_siswa}</td>
+                                        <td>{siswa.jenis_kelamin}</td>
                                         <td>
                                             <button className="btn btn-warning m-2" onClick={() => handleEdit(siswa.kode_siswa)}>
                                                 ✏️ Edit
@@ -128,7 +144,7 @@ export default function DataSiswa() {
                     <div className="modal-content">
                         <div className="modal-header">
                             <h1 className="modal-title fs-5" id="exampleModalLabel">TAMBAH SISWA</h1>
-                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <button type="button" className="btn-close" data-bs-dismiss="modal" onClick={closeModal}></button>
                         </div>
                         <div className="modal-body">
                             <form onSubmit={handleSubmit}>
@@ -176,7 +192,20 @@ export default function DataSiswa() {
                                     />
                                     <label htmlFor="floatingJurusan">Jurusan</label>
                                 </div>
-                                <button className="btn btn-primary col-12">Save</button>
+                                <div className="form-floating mb-1">
+                                    <select
+                                        className="form-select"
+                                        id="floatingJenkel"
+                                        value={jenkel}
+                                        onChange={(e) => setJenkel(e.target.value)}
+                                    >
+                                        <option value="">Pilih Jenis Kelamin</option>
+                                        <option value="Laki-laki">Laki-laki</option>
+                                        <option value="Perempuan">Perempuan</option>
+                                    </select>
+                                    <label htmlFor="floatingJenkel">Jenis Kelamin</label>
+                                </div>
+                                <button className="btn btn-primary col-12">Simpan</button>
                             </form>
                         </div>
                     </div>

@@ -8,6 +8,7 @@ export default function EditSiswa() {
     const [alamat, setAlamat] = useState("");
     const [tanggal, setTanggal] = useState("");
     const [jurusan, setJurusan] = useState("");
+    const [jenkel, setJenkel] = useState("");
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -24,6 +25,7 @@ export default function EditSiswa() {
                 setAlamat(myData.alamat_siswa);
                 setTanggal(myData.tgl_siswa ? myData.tgl_siswa.split("T")[0] : "");
                 setJurusan(myData.jurusan_siswa);
+                setJenkel(myData.jenis_kelamin);
             })
             .catch(error => {
                 console.error("Gagal mengambil data Siswa:", error.response?.data || error.message);
@@ -38,7 +40,8 @@ export default function EditSiswa() {
                 nama_siswa: nama,
                 alamat_siswa: alamat,
                 tgl_siswa: tanggal,
-                jurusan_siswa: jurusan
+                jurusan_siswa: jurusan,
+                jenis_kelamin: jenkel
             })
             .then(response => {
                 console.log(response);
@@ -70,41 +73,54 @@ export default function EditSiswa() {
                         </button>
                     </div>
                     <form onSubmit={handleUpdate}>
-                        <div className='mb-3' style={{ width: '500px' }}>
-                            <label className='form-label'>Nama</label>
+                        <div className="form-floating mb-1" style={{ width: '500px' }}>
                             <input
                                 type="text"
                                 className='form-control'
                                 value={nama}
                                 onChange={(e) => setNama(e.target.value)}
                             />
+                            <label htmlFor="floatingNama">Nama Siswa</label>
                         </div>
-                        <div className='mb-3'>
-                            <label className='form-label'>Alamat</label>
+                        <div className="form-floating mb-1">
                             <input
                                 type="text"
                                 className='form-control'
                                 value={alamat}
                                 onChange={(e) => setAlamat(e.target.value)}
                             />
+                            <label htmlFor="floatingAlamat">Alamat Siswa</label>
                         </div>
-                        <div className='mb-3'>
-                            <label className='form-label'>Tanggal Lahir</label>
+                        <div className="form-floating mb-1">
                             <input
                                 type="date"
                                 className='form-control'
                                 value={tanggal}
                                 onChange={(e) => setTanggal(e.target.value)}
                             />
+                            <label htmlFor="floatingTanggal">Tanggal Lahir Siswa</label>
                         </div>
-                        <div className='mb-3'>
-                            <label className='form-label'>Jurusan</label>
+                        <div className="form-floating mb-1">
                             <input
                                 type="text"
                                 className='form-control'
                                 value={jurusan}
                                 onChange={(e) => setJurusan(e.target.value)}
                             />
+                            <label htmlFor="floatingJurusan">Jurusan Siswa</label>
+                        </div>
+                        <div className="form-floating mb-1">
+                            <select
+                                className="form-select"
+                                id="floatingJenkel"
+                                value={jenkel}
+                                onChange={(e) => setJenkel(e.target.value)}
+                            >
+                                <option value="">Pilih Jenis Kelamin</option>
+                                <option value="Laki-laki">Laki-laki</option>
+                                <option value="Perempuan">Perempuan</option>
+                            </select>
+                            <label htmlFor="floatingJenkel">Jenis Kelamin</label>
                         </div>
                         <button type="submit" className='btn btn-primary w-100'>
                             Edit
